@@ -2,7 +2,7 @@
 #. /etc/profile.d/rbenv.sh
 set -ex
 
-export RAILS_ENV=production
+export RAILS_ENV=development
 echo "Current user: [`whoami`], Ruby version: `ruby -v`..."
 
 for file in /opt/nginx/{,**/}*.erb; do

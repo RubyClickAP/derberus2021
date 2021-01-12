@@ -9,12 +9,12 @@ USER root
 #Install SVN client from official repository
 #RUN #echo "deb http://opensource.wandisco.com/ubuntu `lsb_release -cs` svn19" >> /etc/apt/sources.list.d/subversion19.list \
     #&& curl -sS http://opensource.wandisco.com/wandisco-debian.gpg | apt-key add - \
-RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion openjdk-8-jre-headless \
+RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion \
     && svn co --non-interactive --no-auth-cache --quiet http://192.168.50.164/svn/derberus/trunk /opt/derberus \
     && chown -R docker:staff /opt/derberus \
 #    && sed -i 's/Toriredis/localhost/g' /opt/derberus/config/settings.yml \
     && sed -i 's/localhost/Toriredis/g' /opt/derberus/config/settings.yml \
-    && apt-get install -yq --no-install-recommends redis unoconv \
+    && apt-get install -yq --no-install-recommends openjdk-8-jre-headless unoconv \
 #    && timedatectl set-timezone Asia/Taipei \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -66,9 +66,9 @@ RUN mkdir -p /opt/derberus/log \
     # && curl -sfSL -o /etc/init.d/toriqueue "https://gist.githubusercontent.com/RubyClickAP/f36239c59eb9d5b2f3ba4eeb7064b02b/raw/1ac2708b5e88e0b5a9a2cce54e28cfcb55f890bf/etc-init.d-toriqueue-ub" \
     # && chmod +x /etc/init.d/toriqueue \
 # Run docker: 
-# docker run -d -p80:80 --name tori2derberus --link Toriredis:redis canvastw/tori-derberus:2.3-bionic
+# docker run -d -p80:80 --name tori2derberus --link Toriredis:redis moodletw/derverus2020:latest
 # After run, You can do smoke test by:
-# QUEUES=* rake resque:work --trace 
+# RAILS_ENV=development QUEUES=* rake resque:work --trace 
 # rackup -o 0.0.0.0
 
 USER docker
