@@ -14,7 +14,9 @@ RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion 
     && chown -R docker:staff /opt/derberus \
 #    && sed -i 's/Toriredis/localhost/g' /opt/derberus/config/settings.yml \
     && sed -i 's/localhost/Toriredis/g' /opt/derberus/config/settings.yml \
-    && apt-get install -yq --no-install-recommends openjdk-8-jre-headless unoconv \
+    && apt-get install -yq --no-install-recommends openjdk-8-jre-headless libreoffice unoconv \
+    # Chinese font
+    fontconfig xfonts-utils ttf-wqy-microhei \
 #    && timedatectl set-timezone Asia/Taipei \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

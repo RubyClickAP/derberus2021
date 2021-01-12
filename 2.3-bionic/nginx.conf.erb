@@ -8,7 +8,7 @@
   APP_ROOT_PATH = ENV.fetch('APP_ROOT_PATH', nil) #'/usr/src/app/public'
   CG_ENVIRONMENT = ENV.fetch('CG_ENVIRONMENT', 'local')
   RAILS_ENV = ENV.fetch('RAILS_ENV', 'production')
-  DAEMONUSER = RAILS_ENV == 'production' ? 'docker' : 'vagrant'
+  DAEMONUSER = RAILS_ENV == 'production' ? 'docker' : 'docker'
 
   LEGACY_PORTS = ENV.fetch('LEGACY_PORTS', '1') == '1'
   HTTP_PORT = ENV.fetch('CG_HTTP_PORT', LEGACY_PORTS ? '81' : '8080')
