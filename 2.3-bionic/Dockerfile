@@ -15,10 +15,10 @@ RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion 
     && chown -R docker:staff /opt/derberus \
 #    && sed -i 's/Toriredis/localhost/g' /opt/derberus/config/settings.yml \
     && sed -i 's/localhost/Toriredis/g' /opt/derberus/config/settings.yml \
-    && apt-get install -yq --no-install-recommends openjdk-8-jre-headless libreoffice unoconv \
+    && apt-get install -yq --no-install-recommends openjdk-8-jre-headless libreoffice unoconv tzdata \
     # Chinese font
     fontconfig xfonts-utils ttf-wqy-microhei \
-    # timezone
+    # timezone && timedatectl set-timezone Asia/Taipei \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && echo "Asia/Taipei" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -68,9 +68,9 @@ RUN mkdir -p /opt/derberus/log \
 # docker run -d -p80:80 --name Derberus --restart=always \
 #  -v /home/docside/data:/opt/derberus/public/data   -v /home/docside/drive:/opt/derberus/public/drive \
 #  --link Toriredis:redis moodletw/tory-derberus2020:25
+#
 # After that, You can do smoke test by:
 # RAILS_ENV=development QUEUES=* rake resque:work --trace 
-# rackup -o 0.0.0.0
 
 USER docker
 
