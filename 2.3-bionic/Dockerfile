@@ -43,7 +43,9 @@ RUN echo 'gem: --user-install --no-document' > ~/.gemrc \
     && gem install activesupport -v 5.2.4.4 \
     && gem install mono_logger -v 1.1.0 \
     && gem install unix-crypt -v 1.3.0 \
-    && gem install markdown -v 1.2.0
+    #&& gem install markdown -v 1.2.0 \
+    && gem install kramdown -v 2.3.0 \
+    && gem install mail -v 2.7.1
 
 USER root
 # Nginx Configuration
