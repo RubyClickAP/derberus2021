@@ -6,6 +6,7 @@ FROM canvastw/ruby-passenger:2.3-bionic
 LABEL MAINTAINER Click-AP
 
 USER root
+ENV DEBIAN_FRONTEND=noninteractive
 #Install SVN client from official repository
 #RUN #echo "deb http://opensource.wandisco.com/ubuntu `lsb_release -cs` svn19" >> /etc/apt/sources.list.d/subversion19.list \
     #&& curl -sS http://opensource.wandisco.com/wandisco-debian.gpg | apt-key add - \
@@ -17,7 +18,8 @@ RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion 
     && apt-get install -yq --no-install-recommends openjdk-8-jre-headless libreoffice unoconv \
     # Chinese font
     fontconfig xfonts-utils ttf-wqy-microhei \
-#    && timedatectl set-timezone Asia/Taipei \
+    # timezone
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && echo "Asia/Taipei" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -49,10 +51,6 @@ COPY nginx.conf.erb /opt/nginx/conf/nginx.conf.erb
 COPY location.d/* /opt/nginx/location.d/
 COPY server.d/*   /opt/nginx/server.d/
 
-##RUN git clone https://github.com/RubyClickAP/tori2018.git /usr/src/app
-##RUN svn co -q --non-interactive --no-auth-cache --username admin --password Jack5899!  http://192.168.1.166:18080/svn/yakitory/branches/security2018/ /usr/src/app
-#RUN svn co --non-interactive --no-auth-cache http://192.168.50.164/svn/yakitory/branches/security2018 /opt/yakitory
-
 # entrypoint
 COPY entrypoint /usr/src/entrypoint
 RUN mkdir -p /opt/derberus/log \
@@ -64,20 +62,16 @@ RUN mkdir -p /opt/derberus/log \
     && chmod +x /usr/src/entrypoint \
     && rm /opt/derberus/Gemfile
 
-#COPY toriqueue /etc/init.d/toriqueue
-#RUN chmod +x /etc/init.d/toriqueue \
-    # && curl -sfSL -o /etc/init.d/toriqueue "https://gist.githubusercontent.com/RubyClickAP/f36239c59eb9d5b2f3ba4eeb7064b02b/raw/1ac2708b5e88e0b5a9a2cce54e28cfcb55f890bf/etc-init.d-toriqueue-ub" \
-    # && chmod +x /etc/init.d/toriqueue \
-# Run docker: 
-# docker run -d -p80:80 --name tori2derberus --link Toriredis:redis moodletw/derverus2020:latest
-# After run, You can do smoke test by:
+# docker run -d -p80:80 --name Derberus --link Toriredis:redis moodletw/derverus2020:latest or 
+# docker run -d -p80:80 --name Derberus --restart=always \
+#  -v /home/docside/data:/opt/derberus/public/data   -v /home/docside/drive:/opt/derberus/public/drive \
+#  --link Toriredis:redis moodletw/tory-derberus2020:25
+# After that, You can do smoke test by:
 # RAILS_ENV=development QUEUES=* rake resque:work --trace 
 # rackup -o 0.0.0.0
 
 USER docker
 
 EXPOSE 80
-#ENV PASSENGERROOT=`passenger-config --root`
-#ENV RUBYBIN=`which ruby`
 WORKDIR /opt/derberus
 ENTRYPOINT ["/tini", "--", "/usr/src/entrypoint"]
