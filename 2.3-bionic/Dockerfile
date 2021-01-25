@@ -20,6 +20,8 @@ RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion 
     fontconfig xfonts-utils ttf-wqy-microhei \
     # timezone && timedatectl set-timezone Asia/Taipei \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && echo "Asia/Taipei" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
+    && echo "Asia/Taipei" > /etc/timezone  && dpkg-reconfigure -f noninteractive tzdata \
+    && timedatectl set-timezone Asia/Taipei \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
