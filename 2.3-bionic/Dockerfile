@@ -7,6 +7,7 @@ LABEL MAINTAINER Click-AP
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Taipei
 #Install SVN client from official repository
 #RUN #echo "deb http://opensource.wandisco.com/ubuntu `lsb_release -cs` svn19" >> /etc/apt/sources.list.d/subversion19.list \
     #&& curl -sS http://opensource.wandisco.com/wandisco-debian.gpg | apt-key add - \
@@ -19,9 +20,11 @@ RUN apt-get update -q && apt-get install -yq --no-install-recommends subversion 
     # Chinese font
     fontconfig xfonts-utils ttf-wqy-microhei \
     # timezone && timedatectl set-timezone Asia/Taipei \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && echo "Asia/Taipei" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
-    && echo "Asia/Taipei" > /etc/timezone  && dpkg-reconfigure -f noninteractive tzdata \
-    && timedatectl set-timezone Asia/Taipei \
+    #&& DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && echo "Asia/Taipei" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
+    #&& echo "Asia/Taipei" > /etc/timezone  && dpkg-reconfigure -f noninteractive tzdata \
+    && apt-get install -y tzdata \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
